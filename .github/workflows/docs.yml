@@ -1,0 +1,22 @@
+name: Deploy Documentation
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+  deploy-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build and Deploy Documentation
+        uses: rakrsh/central-actions/doc-build-deploy@main
+        with:
+          doc-build-command: "pip install uv && uv pip install --system -e .[docs] && mkdocs build"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy: "true"
