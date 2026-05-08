@@ -11,7 +11,7 @@ These are the instructions for GitHub Copilot and other AI assistants working in
 ## Python Specifics
 - **Type Hints**: Use Type Hints (PEP 484) for all function arguments and return values.
 - **Formatting**: Adhere to PEP 8 standards. Use `black` or `ruff` for formatting and linting.
-- **Testing**: Write unit tests using `pytest`.
+- **Testing**: Write unit tests using `pytest` and `httpx`. Ensure new tests pass the CI unit test workflow defined in `.github/workflows/unit-tests.yml`.
 - **Documentation**: Include proper docstrings (Google or NumPy style) for classes, methods, and complex functions.
 - **Logging**: Prioritize clear error handling and `logging` over basic `print` statements.
 
