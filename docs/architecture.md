@@ -27,7 +27,10 @@ graph TD
         ML[ML Service]
         MLFlow[MLFlow Tracking]
         Seeder[Seeder]
+        UI[React UI Dashboard]
     end
+
+    UI --> API
 
     API --> DB
     API --> Mongo
