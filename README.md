@@ -50,3 +50,13 @@ For local development and testing, install the development dependencies:
 uv pip install -e .[dev]
 pre-commit install
 ```
+
+### Running Tests
+
+Unit tests are written using `pytest`. You can run them locally with:
+
+```bash
+PYTHONPATH=$PYTHONPATH:. pytest tests/
+```
+
+The repository also includes a GitHub Actions workflow (`.github/workflows/unit-tests.yml`) that automatically runs these tests on every push and pull request to the `main` branch.
