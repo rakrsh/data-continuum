@@ -2,6 +2,47 @@
 
 The Data-Continuum architecture is built on a Polyglot Persistence pattern with an Event-Driven Orchestration layer. 
 
+## Architecture Diagram
+
+```mermaid
+graph TD
+    subgraph Observability
+        Prometheus[Prometheus]
+        Grafana[Grafana]
+    end
+
+    subgraph Data_Layer [Data Layer]
+        DB[(PostgreSQL)]
+        Mongo[(MongoDB)]
+        Redis[(Redis)]
+    end
+
+    subgraph Workflow_Orchestration [Workflow & Orchestration]
+        AirflowWeb[Airflow Webserver]
+        AirflowSched[Airflow Scheduler]
+    end
+
+    subgraph Service_ML_Layer [Service & ML Layer]
+        API[API Service]
+        ML[ML Service]
+        MLFlow[MLFlow Tracking]
+        Seeder[Seeder]
+    end
+
+    API --> DB
+    API --> Mongo
+    Seeder --> DB
+    Seeder --> Mongo
+    
+    AirflowWeb --> DB
+    AirflowSched --> DB
+    AirflowSched --> Redis
+    
+    ML --> MLFlow
+    
+    Grafana --> Prometheus
+```
+
 ## System Components
 
 ### 1. Data Ingestion Layer (The Source)
