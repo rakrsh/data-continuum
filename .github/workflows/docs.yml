@@ -17,6 +17,6 @@ jobs:
       - name: Build and Deploy Documentation
         uses: rakrsh/central-actions/doc-build-deploy@main
         with:
-          doc-build-command: "pip install uv && uv pip install --system -e .[docs] && mkdocs build"
+          doc-build-command: "pipx install uv && uv venv && source .venv/bin/activate && uv pip install -e .[docs] && mkdocs build"
           github-token: ${{ secrets.GITHUB_TOKEN }}
           deploy: "true"
