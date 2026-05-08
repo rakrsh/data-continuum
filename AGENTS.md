@@ -16,6 +16,7 @@ This document outlines the operational boundaries, tool usage policies, and safe
 ## Best Practices
 - **Documentation**: Automatically update relevant markdown files in `docs/` if your changes alter system architecture or APIs.
 - **Comprehensive Updates**: Any change in source code should also prompt a check to update the architecture diagram (`docs/architecture.md`), Copilot instructions (`.github/copilot-instructions.md`), `AGENTS.md`, pre-commit hooks, tests, and documentation as appropriate.
+- **CI Workflows**: When modifying, adding, or deleting dependencies/components, always consider updating the corresponding CI workflows (e.g., `unit-tests.yml`, `security.yml`) to ensure comprehensive coverage, including security and vulnerability checks.
 - **Tool Usage**: Prefer specialized tools (e.g., file readers, AST modifiers) over generic shell commands (e.g., `sed`, `awk`) for reliability.
 - **Commit History**: When committing code, provide clear, descriptive commit messages summarizing the changes and their rationale.
 

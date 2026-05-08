@@ -5,6 +5,7 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   security-check:
@@ -38,12 +39,26 @@ jobs:
         pip-licenses --format=json --output-file=license-report.json || true
         pip-licenses || true
 
+    - name: Set up Node.js for UI
+      uses: actions/setup-node@v6
+      with:
+        node-version: '20'
+
+    - name: Run UI Vulnerability Scan
+      run: |
+        cd ui
+        npm install --package-lock-only
+        npm audit --json > ../ui-vulnerability-report.json || true
+        npm audit || true
+
     - name: Show Reports in Run Logs
       run: |
         echo "=== Vulnerability Report ==="
         cat vulnerability-report.json || echo "No vulnerability report generated"
         echo "=== License Report ==="
         cat license-report.json || echo "No license report generated"
+        echo "=== UI Vulnerability Report ==="
+        cat ui-vulnerability-report.json || echo "No UI vulnerability report generated"
 
     - name: Upload Reports Artifacts
       uses: actions/upload-artifact@v6
@@ -52,3 +67,4 @@ jobs:
         path: |
           vulnerability-report.json
           license-report.json
+          ui-vulnerability-report.json

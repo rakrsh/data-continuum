@@ -27,6 +27,7 @@ docker-compose up --build -d
 
 ### Accessing Services
 
+* **React UI Dashboard:** `http://localhost:5173`
 * **Airflow UI:** `http://localhost:8080` (admin/admin)
 * **Unified API (Swagger):** `http://localhost:8000/docs`
 * **MLflow Tracking Server:** `http://localhost:5000`
@@ -53,10 +54,17 @@ pre-commit install
 
 ### Running Tests
 
-Unit tests are written using `pytest`. You can run them locally with:
+Unit tests are written using `pytest` for Python and `vitest` for the React UI.
 
+**Python Tests:**
 ```bash
 PYTHONPATH=$PYTHONPATH:. pytest tests/
+```
+
+**React UI Tests:**
+```bash
+cd ui
+npm run test
 ```
 
 The repository also includes a GitHub Actions workflow (`.github/workflows/unit-tests.yml`) that automatically runs these tests on every push and pull request to the `main` branch.
