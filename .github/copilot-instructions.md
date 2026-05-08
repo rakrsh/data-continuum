@@ -19,3 +19,4 @@ These are the instructions for GitHub Copilot and other AI assistants working in
 - **Dependencies**: Keep the `pyproject.toml` and lockfiles (`uv.lock`) synchronized when dependencies are modified.
 - **Microservices**: This project utilizes a containerized architecture. Ensure all new logic is Docker-friendly and respects service boundaries.
 - **Documentation**: Ensure any changes to logic or architecture are reflected in the `docs/` directory or relevant `README.md` files.
+- **Comprehensive Updates**: Any change in source code should also prompt a check to update the architecture diagram (`docs/architecture.md`), Copilot instructions (`.github/copilot-instructions.md`), `AGENTS.md`, pre-commit hooks, tests, and documentation as appropriate.
