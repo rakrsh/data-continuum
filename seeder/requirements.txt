@@ -1,4 +1,4 @@
-faker==24.0.0
-psycopg2-binary==2.9.9
-pymongo==4.6.2
-sqlalchemy==2.0.29
+faker
+psycopg2-binary
+pymongo
+sqlalchemy
