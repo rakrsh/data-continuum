@@ -34,6 +34,8 @@ nav:
   - Observability: observability.md
   - Deployment:
       - Kubernetes: deployment/kubernetes.md
+      - Process-based: deployment/process-based.md
+      - Windows Native: deployment/windows.md
 
 plugins:
   - search
