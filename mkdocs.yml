@@ -32,6 +32,8 @@ nav:
     - ML Service: services/ml.md
   - Orchestration: orchestration.md
   - Observability: observability.md
+  - Deployment:
+      - Kubernetes: deployment/kubernetes.md
 
 plugins:
   - search

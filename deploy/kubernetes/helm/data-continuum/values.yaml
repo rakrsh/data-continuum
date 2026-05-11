@@ -1,0 +1,104 @@
+# Default values for data-continuum.
+# This is a YAML-formatted file.
+
+replicaCount: 1
+
+image:
+  repository: data-continuum
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+podSecurityContext: {}
+securityContext: {}
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+
+resources: {}
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+# Application Specific Configurations
+api:
+  enabled: true
+  image:
+    repository: data-continuum-api
+    tag: latest
+  service:
+    port: 8000
+  resources:
+    limits:
+      cpu: 500m
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+ui:
+  enabled: true
+  image:
+    repository: data-continuum-ui
+    tag: latest
+  service:
+    port: 5173
+
+ml:
+  enabled: true
+  image:
+    repository: data-continuum-ml
+    tag: latest
+  service:
+    port: 8001
+
+seeder:
+  enabled: true
+  image:
+    repository: data-continuum-seeder
+    tag: latest
+
+# Infrastructure (Optional: In a real scenario, these might be subcharts)
+postgres:
+  host: postgres
+  port: 5432
+  user: postgres
+  password: postgres
+  db: continuum
+
+mongodb:
+  host: mongodb
+  port: 27017
+  user: admin
+  password: admin
+
+redis:
+  host: redis
+  port: 6379
