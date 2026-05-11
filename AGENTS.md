@@ -23,4 +23,4 @@ This document outlines the operational boundaries, tool usage policies, and safe
 ## Project Specifics (Data-Continuum)
 - The project integrates multiple domains including APIs, Airflow workflows, and ML components.
 - Maintain consistency across boundaries: Ensure changes in one domain (e.g., database schemas) correctly propagate to dependent layers (e.g., API Pydantic models).
-- Respect Docker environments: Test functionality keeping in mind that components are expected to run within containerized configurations defined in `docker-compose.yml`.
+- Respect Deployment Environments: Test functionality keeping in mind that components are expected to run within containerized configurations defined in `docker-compose.yml` and orchestrated via Helm charts in `deploy/kubernetes/`.

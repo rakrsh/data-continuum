@@ -1,0 +1,27 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "data-continuum.fullname" . }}-seeder
+  labels:
+    {{- include "data-continuum.labels" . | nindent 4 }}
+    component: seeder
+  annotations:
+    "helm.sh/hook": post-install,post-upgrade
+    "helm.sh/hook-weight": "5"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  template:
+    metadata:
+      labels:
+        {{- include "data-continuum.selectorLabels" . | nindent 8 }}
+        component: seeder
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: seeder
+          image: "{{ .Values.seeder.image.repository }}:{{ .Values.seeder.image.tag }}"
+          env:
+            - name: POSTGRES_URL
+              value: "postgresql://{{ .Values.postgres.user }}:{{ .Values.postgres.password }}@{{ .Values.postgres.host }}:{{ .Values.postgres.port }}/{{ .Values.postgres.db }}"
+            - name: MONGO_URL
+              value: "mongodb://{{ .Values.mongodb.user }}:{{ .Values.mongodb.password }}@{{ .Values.mongodb.host }}:{{ .Values.mongodb.port }}/"

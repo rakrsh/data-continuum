@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "data-continuum.fullname" . }}-ml
+  labels:
+    {{- include "data-continuum.labels" . | nindent 4 }}
+    component: ml
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "data-continuum.selectorLabels" . | nindent 6 }}
+      component: ml
+  template:
+    metadata:
+      labels:
+        {{- include "data-continuum.selectorLabels" . | nindent 8 }}
+        component: ml
+    spec:
+      containers:
+        - name: ml
+          image: "{{ .Values.ml.image.repository }}:{{ .Values.ml.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.ml.service.port }}
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "data-continuum.fullname" . }}-ml
+  labels:
+    {{- include "data-continuum.labels" . | nindent 4 }}
+    component: ml
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.ml.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "data-continuum.selectorLabels" . | nindent 4 }}
+    component: ml

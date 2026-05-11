@@ -1,0 +1,79 @@
+# Airflow Common ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "data-continuum.fullname" . }}-airflow-config
+data:
+  AIRFLOW__CORE__EXECUTOR: LocalExecutor
+  AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://{{ .Values.postgres.user }}:{{ .Values.postgres.password }}@{{ .Values.postgres.host }}:{{ .Values.postgres.port }}/airflow
+  AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+  AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "true"
+---
+# Airflow Webserver
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "data-continuum.fullname" . }}-airflow-webserver
+  labels:
+    {{- include "data-continuum.labels" . | nindent 4 }}
+    component: airflow-webserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "data-continuum.selectorLabels" . | nindent 6 }}
+      component: airflow-webserver
+  template:
+    metadata:
+      labels:
+        {{- include "data-continuum.selectorLabels" . | nindent 8 }}
+        component: airflow-webserver
+    spec:
+      containers:
+        - name: webserver
+          image: apache/airflow:2.7.1
+          command: ["airflow", "webserver"]
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: {{ include "data-continuum.fullname" . }}-airflow-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "data-continuum.fullname" . }}-airflow-webserver
+spec:
+  ports:
+    - port: 8080
+  selector:
+    {{- include "data-continuum.selectorLabels" . | nindent 4 }}
+    component: airflow-webserver
+---
+# Airflow Scheduler
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "data-continuum.fullname" . }}-airflow-scheduler
+  labels:
+    {{- include "data-continuum.labels" . | nindent 4 }}
+    component: airflow-scheduler
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "data-continuum.selectorLabels" . | nindent 6 }}
+      component: airflow-scheduler
+  template:
+    metadata:
+      labels:
+        {{- include "data-continuum.selectorLabels" . | nindent 8 }}
+        component: airflow-scheduler
+    spec:
+      containers:
+        - name: scheduler
+          image: apache/airflow:2.7.1
+          command: ["airflow", "scheduler"]
+          envFrom:
+            - configMapRef:
+                name: {{ include "data-continuum.fullname" . }}-airflow-config
