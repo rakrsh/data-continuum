@@ -4,6 +4,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy import Column, Integer, String, DateTime, select
 import motor.motor_asyncio
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
@@ -69,3 +70,8 @@ async def get_unified_shipment_state(shipment_id: int):
 @app.get("/health")
 async def health_check():
     return {"status": "healthy"}
+
+# Serve UI static files
+ui_path = os.path.join(os.path.dirname(__file__), "ui")
+if os.path.exists(ui_path):
+    app.mount("/", StaticFiles(directory=ui_path, html=True), name="ui")

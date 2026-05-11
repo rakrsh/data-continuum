@@ -1,0 +1,66 @@
+name: Windows Installer Build
+
+on:
+  push:
+    branches: [ main, process_based ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+        cache: 'pip'
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        cache-dependency-path: 'ui/package-lock.json'
+
+    - name: Install Python build dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install nuitka zstandard
+        pip install -r api/requirements.txt
+        pip install -r ml/requirements.txt
+
+    - name: Build UI
+      working-directory: ./ui
+      run: |
+        npm install
+        npm run build
+
+    - name: Compile API with Nuitka
+      run: |
+        python -m nuitka --standalone --onefile --output-dir=build --output-filename=data-continuum-api.exe api/main.py
+
+    - name: Compile ML Service with Nuitka
+      run: |
+        python -m nuitka --standalone --onefile --output-dir=build --output-filename=data-continuum-ml.exe ml/main.py
+
+    - name: Download NSSM
+      run: |
+        Invoke-WebRequest -Uri "https://nssm.cc/release/nssm-2.24.zip" -OutFile "nssm.zip"
+        Expand-Archive -Path "nssm.zip" -DestinationPath "nssm_temp"
+        Copy-Item "nssm_temp\nssm-2.24\win64\nssm.exe" -Destination "deploy\windows\nssm.exe"
+
+    - name: Build Installer with Inno Setup
+      run: |
+        & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" deploy\windows\installer.iss
+
+    - name: Upload Installer
+      uses: actions/upload-artifact@v4
+      with:
+        name: DataContinuum-Windows-Installer
+        path: dist/DataContinuumInstaller.exe
