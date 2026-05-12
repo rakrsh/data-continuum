@@ -1,18 +1,20 @@
+name: release-please
+
 on:
   push:
     branches:
       - main
 
-permissions:
-  contents: write
-  pull-requests: write
-
-name: release-please
-
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      packages: write
     steps:
-      - uses: googleapis/release-please-action@v5
+      - uses: googleapis/release-please-action@v4
+        id: release
         with:
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
           release-type: python
