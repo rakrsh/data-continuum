@@ -24,9 +24,11 @@ jobs:
         pip install uv
         uv pip install --system -e ".[dev]"
 
-    - name: Run Pytest
-      run: |
-        PYTHONPATH=$PYTHONPATH:. pytest tests/
+    - name: Run Python Tests
+      uses: rakrsh/central-actions/run-tests@main
+      with:
+        test-command: "pytest tests/"
+        working-directory: "."
 
     - name: Set up Node.js
       uses: actions/setup-node@v6
@@ -34,7 +36,7 @@ jobs:
         node-version: '20'
 
     - name: Run React Tests
-      run: |
-        cd ui
-        npm install
-        npm test
+      uses: rakrsh/central-actions/run-tests@main
+      with:
+        test-command: "npm install && npm test"
+        working-directory: "ui"
