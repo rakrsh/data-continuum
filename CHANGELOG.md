@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.0](https://github.com/rakrsh/data-continuum/compare/v0.1.0...v0.2.0) (2026-05-13)
+
+
+### Features
+
+* Package creation on release ([8a57bb4](https://github.com/rakrsh/data-continuum/commit/8a57bb4ec926a9ac69e55217edde3e3fe8a7872e))
+
+
+### Bug Fixes
+
+* Update unit tests ([e9a4c19](https://github.com/rakrsh/data-continuum/commit/e9a4c199430a3fed2a6ab1def3af8813c67dc905))
+* Upload packages on release ([92fe75e](https://github.com/rakrsh/data-continuum/commit/92fe75e32d9759684a0fe62ac38cd830f098b33d))
+
 ## 0.1.0 (2026-05-12)
 
 
