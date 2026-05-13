@@ -4,16 +4,28 @@ import mlflow
 import mlflow.sklearn
 from sklearn.linear_model import LinearRegression
 import numpy as np
-import pandas as pd
 from prometheus_fastapi_instrumentator import Instrumentator
 
-app = FastAPI(title="Data-Continuum ML Service")
+from contextlib import asynccontextmanager
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Initialize MLflow
+    mlflow_uri = os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5000")
+    mlflow.set_tracking_uri(mlflow_uri)
+    try:
+        mlflow.set_experiment("predictive_eta")
+        print(f"MLflow initialized with URI: {mlflow_uri}")
+    except Exception as e:
+        print(f"Warning: Failed to connect to MLflow at {mlflow_uri}: {e}")
+    yield
+
+
+app = FastAPI(title="Data-Continuum ML Service", lifespan=lifespan)
 
 Instrumentator().instrument(app).expose(app)
 
-MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5000")
-mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
-mlflow.set_experiment("predictive_eta")
 
 def train_model():
     print("Starting ML training job...")
@@ -30,10 +42,12 @@ def train_model():
         mlflow.sklearn.log_model(model, "model")
         print(f"Training completed. R2 Score: {score}")
 
+
 @app.post("/train")
 async def trigger_training(background_tasks: BackgroundTasks):
     background_tasks.add_task(train_model)
     return {"message": "Training job triggered in background."}
+
 
 @app.get("/health")
 async def health_check():
